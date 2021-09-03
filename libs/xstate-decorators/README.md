@@ -214,7 +214,7 @@ Contributions, issues and feature requests are welcome!<br />Feel free to check 
 
 Give a ⭐️ if this project helped you!
 
-<a class="github-button" href="https://github.com/sponsors/d3v0ps" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @d3v0ps on GitHub">Sponsor</a>
+[![Sponsors](https://img.shields.io/github/sponsors/d3v0ps)](https://github.com/sponsors/d3v0ps)
 
 ## 📝 License
 
