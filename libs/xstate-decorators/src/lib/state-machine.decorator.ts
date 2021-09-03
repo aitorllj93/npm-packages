@@ -7,7 +7,7 @@ export const StateMachine = <Context = unknown>(
   config: MachineConfig<Context, any, EventObject>,
   options?: Partial<MachineOptions<any, EventObject>>,
 ) => {
-  return function (target: { new(...args: any[]): StateMachineExecutor;[key: string]: any }) {
+  return function (target: { new(...args: any[]): StateMachineExecutor<Context>;[key: string]: any }) {
     // save a reference to the original constructor
     const original = target;
 
