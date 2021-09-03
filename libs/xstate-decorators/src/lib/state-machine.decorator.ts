@@ -1,51 +1,47 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createMachine, EventObject, MachineConfig, MachineOptions } from 'xstate';
-import { DecoratorStateMachineExecutor } from './decorator-state-machine.executor';
+import "reflect-metadata";
+import { AnyEventObject, ConditionPredicate, createMachine, EventObject, MachineConfig, MachineOptions } from 'xstate';
 import { StateMachineExecutor } from './state-machine.executor';
+import { guardMetadataKey } from './guard.decorator';
 
 export const StateMachine = <Context = unknown>(
   config: MachineConfig<Context, any, EventObject>,
-  options?: Partial<MachineOptions<any, EventObject>>,
-) => {
-  return function (target: { new(...args: any[]): StateMachineExecutor<Context>;[key: string]: any }) {
-    // save a reference to the original constructor
-    const original = target;
+  options: Partial<MachineOptions<any, EventObject>> = {},
+) =>
+  <T extends new (...args: any[]) => StateMachineExecutor<Context>>(target: T): T => {
 
-    const prototype = target.prototype as DecoratorStateMachineExecutor;
+    const existingGuardParameters: Record<string, ConditionPredicate<any, AnyEventObject>> = Reflect.getMetadata(guardMetadataKey, target.prototype) || {};
 
-    // Apply class methods
-    prototype.with = function (context: Context) {
-      return this.machine.withContext(context).withConfig(this.options);
-    }
+    const decoratedClass = class extends target {
+      constructor(...args: any[]) {
+        super(...args);
 
-    prototype.transition = function (currentState: string, event: string, context?: Context) {
-      const machine = context ? this.with(context) : this.machine.withConfig(this.options);
-      return machine.transition(currentState, event);
-    }
+        this.config = config;
+        this.options = options;
+        this.options.guards = Object.entries({
+          ...(this.options.guards || {}),
+          ...existingGuardParameters
+        }).reduce(
+          (result, [name, guard]) =>
+            Object.assign(result, {
+              [name]: typeof guard === 'function' ? guard.bind(this) : guard
+            }),
+          {},
+        );
 
-    const result = function (...args: any) {
-      const executor = new target(...args);
+        this.machine = createMachine<Context>(this.config as any, this.options);
+      }
 
-      // Write private values
-      (executor as any).config = Object.assign(prototype.config || {}, config);
-      (executor as any).options = Object.assign(prototype.options || {}, options);
+      with(context: Context) {
+        return this.machine.withContext(context).withConfig(this.options);
+      }
 
-      // Bind instance
-      (executor as any).options.guards = Object.entries(((executor as any).options.guards || {}) as [string, any]).reduce(
-        (result, [name, fn]) => Object.assign(result, {
-          [name]: fn.bind(executor)
-        }),
-        {}
-      );
-
-      (executor as any).machine = createMachine((executor as any).config, (executor as any).options);
-
-      return executor;
+      transition(currentState: string, event: string, context?: Context) {
+        const machine = context ? this.with(context) : this.machine.withConfig(this.options);
+        return machine.transition(currentState, event);
+      }
     };
 
-    // copy prototype so intanceof operator still works
-    result.prototype = original.prototype;
+    return decoratedClass;
 
-    return result as any;
   };
-};
