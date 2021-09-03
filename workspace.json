@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "projects": {
+    "xstate-decorators": {
+      "root": "packages/xstate-decorators",
+      "sourceRoot": "packages/xstate-decorators/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/xstate-decorators/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/xstate-decorators"],
+          "options": {
+            "jestConfig": "packages/xstate-decorators/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/xstate-decorators",
+            "tsConfig": "packages/xstate-decorators/tsconfig.lib.json",
+            "packageJson": "packages/xstate-decorators/package.json",
+            "main": "packages/xstate-decorators/src/index.ts",
+            "assets": ["packages/xstate-decorators/*.md"]
+          }
+        }
+      }
+    },
+    "xstate-decorators-npm": {
+      "root": "packages/xstate-decorators-npm"
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/workspace"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@d3v0ps/xstate-decorators",
+  "description": "TypeScript decorators for creating XState machines",
+  "version": "0.0.1",
+  "author": {
+    "name": "Aitor Llamas Jiménez",
+    "email": "aitorllj93@gmail.com",
+    "url": "https://aitorllamas.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "email": "aitorllj93@gmail.com",
+    "url": "https://github.com/d3v0ps/npm-packages/labels/package%3Axstate-decorators"
+  },
+  "homepage": "https://github.com/d3v0ps/npm-packages/blob/main/packages/xstate-decorators/README.md",
+  "keywords": [
+    "xstate",
+    "decorators",
+    "nestjs",
+    "angular"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d3v0ps/npm-packages",
+    "directory": "blob/main/packages/xstate-decorators"
+  },
+  "peerDependencies": {
+    "xstate": "~4.23.3"
+  }
+}

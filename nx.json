@@ -1,0 +1,21 @@
+{
+  "extends": "@nrwl/workspace/presets/npm.json",
+  "npmScope": "d3v0ps",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  },
+  "projects": {
+    "xstate-decorators": {
+      "tags": []
+    },
+    "xstate-decorators-npm": {}
+  }
+}
