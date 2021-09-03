@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { EventObject, MachineConfig, MachineOptions, State, StateMachine as XStateMachine } from 'xstate';
+import { AnyEventObject, MachineConfig, MachineOptions, State, StateMachine as XStateMachine } from 'xstate';
 
-export abstract class StateMachineExecutor<Context = unknown> {
+export abstract class StateMachineExecutor<Context = any> {
 
-  private machine: XStateMachine<Context, unknown, EventObject>;
-  private config: MachineConfig<Context, unknown, EventObject>;
-  private options: Partial<MachineOptions<unknown, EventObject>>;
+  protected machine: XStateMachine<Context, any, AnyEventObject>;
+  protected config: MachineConfig<Context, any, AnyEventObject>;
+  protected options: Partial<MachineOptions<any, AnyEventObject>>;
 
-  with(context: Context): XStateMachine<Context, unknown, EventObject> {
+  with(context: Context): XStateMachine<Context, any, AnyEventObject> {
     throw new Error('Method not implemented');
   }
 

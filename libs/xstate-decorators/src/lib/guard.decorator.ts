@@ -1,14 +1,18 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import "reflect-metadata";
+import { AnyEventObject, ConditionPredicate } from "xstate";
+import { StateMachineExecutor } from "./state-machine.executor";
 
-import { DecoratorStateMachineExecutor } from './decorator-state-machine.executor';
+export const guardMetadataKey = Symbol("guard");
 
 export const Guard = (name: string) => {
-  return function (target: unknown, propertyKey: string | symbol) {
-    const decoratorTargetPrototype = target as DecoratorStateMachineExecutor;
-    decoratorTargetPrototype.options = decoratorTargetPrototype.options || {};
-    decoratorTargetPrototype.options.guards = decoratorTargetPrototype.options.guards || {};
-    Object.assign(decoratorTargetPrototype.options.guards, {
-      [name]: decoratorTargetPrototype[propertyKey]
+  return function (target: StateMachineExecutor, propertyKey: string | symbol,) {
+    const existingGuardParameters: Record<string, ConditionPredicate<any, AnyEventObject>> = Reflect.getMetadata(guardMetadataKey, target) || {};
+
+    Object.assign(existingGuardParameters, {
+      [name]: target[propertyKey]
     });
+
+    Reflect.defineMetadata(guardMetadataKey, existingGuardParameters, target);
   };
 };
