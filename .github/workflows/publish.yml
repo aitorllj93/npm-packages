@@ -20,6 +20,9 @@ jobs:
         if: github.event.pull_request.merged == true && contains(github.event.commits[0].message, '[skip-ci]') == false
         uses: actions/checkout@v2
 
+      - name: Install environment
+        run: npm ci
+
       - name: Deploy
         if: github.event.pull_request.merged == true && contains(github.event.commits[0].message, '[skip-ci]') == false
         env:
