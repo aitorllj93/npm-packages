@@ -31,13 +31,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
       # Make sure we have all branches
       - name: Fetch other branches
-        run: git fetch --no-tags --prune --depth=5 origin master
+        run: git fetch --no-tags --prune --depth=5 origin main
 
       - name: Install environment
         run: npm ci
 
-      - name: Run lint
-        run: npm run affected:lint -- --base="origin/master"
+      #- name: Run lint
+      #  run: npm run affected:lint -- --base="origin/main"
 
       - name: Tests coverage
-        run: npm run affected:test -- --base="origin/master" --codeCoverage
+        run; npm test
+      #  run: npm run affected:test -- --base="origin/main" --codeCoverage
