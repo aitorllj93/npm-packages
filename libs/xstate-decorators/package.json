@@ -1,7 +1,7 @@
 {
   "name": "@d3v0ps/xstate-decorators",
   "description": "TypeScript decorators for creating XState machines",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "author": {
     "name": "Aitor Llamas Jiménez",
     "email": "aitorllj93@gmail.com",
