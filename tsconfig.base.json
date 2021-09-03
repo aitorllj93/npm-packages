@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@d3v0ps/xstate-decorators": ["packages/xstate-decorators/src/index.ts"]
+      "@d3v0ps/xstate-decorators": ["libs/xstate-decorators/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

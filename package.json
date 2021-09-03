@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "start": "nx serve",
+    "build": "nx build",
+    "test": "nx test",
+    "affected:test": "nx affected:test",
+    "affected:lint": "nx affected:lint"
   },
   "private": true,
   "devDependencies": {

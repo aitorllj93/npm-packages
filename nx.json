@@ -2,7 +2,14 @@
   "extends": "@nrwl/workspace/presets/npm.json",
   "npmScope": "d3v0ps",
   "affected": {
-    "defaultBase": "master"
+    "defaultBase": "main"
+  },
+  "implicitDependencies": {
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    ".eslintrc.json": "*"
   },
   "tasksRunnerOptions": {
     "default": {
@@ -12,10 +19,17 @@
       }
     }
   },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
+  },
   "projects": {
     "xstate-decorators": {
       "tags": []
-    },
-    "xstate-decorators-npm": {}
+    }
   }
 }

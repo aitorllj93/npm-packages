@@ -2,21 +2,21 @@
   "version": 2,
   "projects": {
     "xstate-decorators": {
-      "root": "packages/xstate-decorators",
-      "sourceRoot": "packages/xstate-decorators/src",
+      "root": "libs/xstate-decorators",
+      "sourceRoot": "libs/xstate-decorators/src",
       "projectType": "library",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["packages/xstate-decorators/**/*.ts"]
+            "lintFilePatterns": ["libs/xstate-decorators/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/xstate-decorators"],
+          "outputs": ["coverage/libs/xstate-decorators"],
           "options": {
-            "jestConfig": "packages/xstate-decorators/jest.config.js",
+            "jestConfig": "libs/xstate-decorators/jest.config.js",
             "passWithNoTests": true
           }
         },
@@ -24,20 +24,18 @@
           "executor": "@nrwl/node:package",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/packages/xstate-decorators",
-            "tsConfig": "packages/xstate-decorators/tsconfig.lib.json",
-            "packageJson": "packages/xstate-decorators/package.json",
-            "main": "packages/xstate-decorators/src/index.ts",
-            "assets": ["packages/xstate-decorators/*.md"]
+            "outputPath": "dist/libs/xstate-decorators",
+            "tsConfig": "libs/xstate-decorators/tsconfig.lib.json",
+            "packageJson": "libs/xstate-decorators/package.json",
+            "main": "libs/xstate-decorators/src/index.ts",
+            "assets": ["libs/xstate-decorators/*.md"]
+          },
+          "configurations": {
+            "production": {}
           }
         }
       }
-    },
-    "xstate-decorators-npm": {
-      "root": "packages/xstate-decorators-npm"
     }
   },
-  "cli": {
-    "defaultCollection": "@nrwl/workspace"
-  }
+  "defaultProject": "xstate-decorators"
 }
