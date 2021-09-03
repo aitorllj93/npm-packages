@@ -15,7 +15,7 @@ class CheckIsAdmin {
   }
 }
 
-@StateMachine<DoorMachineContext>({
+const machineConfig = {
   id: 'door',
   initial: 'closed',
   context: {
@@ -51,7 +51,9 @@ class CheckIsAdmin {
       },
     },
   },
-})
+};
+
+@StateMachine<DoorMachineContext>(machineConfig)
 class DoorMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
 
   constructor(
@@ -72,36 +74,62 @@ class DoorMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
 
 }
 
+@StateMachine<DoorMachineContext>(machineConfig)
+class WithoutOptionsdMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
+
+}
+
 describe('GuardDecorator', () => {
 
-  let doorMachineExecutor: DoorMachineExecutor;
+  let machine: StateMachineExecutor<DoorMachineContext>;
 
-  beforeEach(() => {
-    doorMachineExecutor = new DoorMachineExecutor(new CheckIsAdmin());
-  })
+  describe('When instantiating a machine with guards', () => {
 
-  describe('When using internal context', () => {
+    beforeEach(() => {
+      machine = new DoorMachineExecutor(new CheckIsAdmin());
+    })
 
-    it('should use internal context', () => {
-      const result = doorMachineExecutor.transition('closed', 'OPEN');
+    describe('When using internal context', () => {
 
-      expect(result.matches('closed.idle')).toBeTruthy();
-    });
+      it('should use internal context', () => {
+        const result = machine.transition('closed', 'OPEN');
 
-
-  })
-
-  describe('When using internal context', () => {
-
-    it('should use externalContext', () => {
-      const result = doorMachineExecutor.transition('closed', 'OPEN', {
-        alert: true,
-        level: 'admin'
+        expect(result.matches('closed.idle')).toBeTruthy();
       });
 
-      expect(result.matches('opened')).toBeTruthy();
+
+    });
+
+    describe('When using internal context', () => {
+
+      it('should use externalContext', () => {
+        const result = machine.transition('closed', 'OPEN', {
+          alert: true,
+          level: 'admin'
+        });
+
+        expect(result.matches('opened')).toBeTruthy();
+      });
+
     });
 
   })
+
+  describe('When not defining any option (i.e guards)', () => {
+
+    beforeEach(() => {
+      machine = new WithoutOptionsdMachineExecutor();
+    })
+
+    it('should throw unable to evaluate due to missing guard', () => {
+      expect(() => {
+        machine.transition('closed', 'OPEN', {
+          alert: true,
+          level: 'admin'
+        });
+      }).toThrow();
+    });
+
+  });
 
 })
