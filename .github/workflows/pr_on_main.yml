@@ -36,9 +36,8 @@ jobs:
       - name: Install environment
         run: npm ci
 
-      #- name: Run lint
-      #  run: npm run affected:lint -- --base="origin/main"
+      - name: Run lint
+        run: npm run affected:lint -- --base="origin/main"
 
       - name: Tests coverage
-        run; npm test
-      #  run: npm run affected:test -- --base="origin/main" --codeCoverage
+        run: npm run affected:test -- --base="origin/main" --codeCoverage
