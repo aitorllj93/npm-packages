@@ -72,6 +72,10 @@ class DoorMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
     return context.alert === true;
   }
 
+  myClassMethod() {
+    throw new Error('Method not implemented')
+  }
+
 }
 
 @StateMachine<DoorMachineContext>(machineConfig)

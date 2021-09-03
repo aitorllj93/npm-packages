@@ -5,8 +5,8 @@ import { StateMachineExecutor } from "./state-machine.executor";
 
 export const guardMetadataKey = Symbol("guard");
 
-export const Guard = (name: string) => {
-  return function (target: StateMachineExecutor, propertyKey: string | symbol,) {
+export const Guard = (name: string) =>
+  <T extends StateMachineExecutor<any>>(target: T, propertyKey: string | symbol) => {
     const existingGuardParameters: Record<string, ConditionPredicate<any, AnyEventObject>> = Reflect.getMetadata(guardMetadataKey, target) || {};
 
     Object.assign(existingGuardParameters, {
@@ -15,4 +15,3 @@ export const Guard = (name: string) => {
 
     Reflect.defineMetadata(guardMetadataKey, existingGuardParameters, target);
   };
-};
