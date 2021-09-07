@@ -18,9 +18,15 @@
 - [Install](#install)
 - [Usage](#usage)
 - [Getting Started](#getting-started)
-  - [Using the decorators](#using-the-decorators)
-  - [Running transitions](#running-transitions)
-  - [Using with outside context](#using-with-outside-context)
+
+  - [State Machine Executor](#state-machine-executor)
+  - [State Machine Interpreter](#state-machine-interpreter)
+  - [Guards](#guards)
+  - [Actions](#actions)
+  - [Activities](#activities)
+  - [Services](#services)
+  - [Using different instances on each call (different contexts)](#using-different-instances-on-each-call-different-contexts)
+
 - [Using with Dependency Injection](#using-with-dependency-injection)
   - [Angular](#angular)
   - [NestJS](#nestjs)
@@ -42,12 +48,13 @@ npm install @d3v0ps/xstate-decorators
 
 Machine Example taken from [XState](https://xstate.js.org/docs/guides/guards.html#multiple-guards)
 
-#### Using the decorators
+#### State Machine Executor
+
+The state machine executor allows you to define a basic state machine with a transition method
 
 ```ts
 import {
   StateMachine,
-  Guard,
   StateMachineExecutor,
 } from '@d3v0ps/xstate-decorators';
 
@@ -56,7 +63,6 @@ export interface DoorMachineContext {
   alert: boolean; // alert when intrusions happen
 }
 
-// Machine Example taken from https://xstate.js.org/docs/guides/guards.html#multiple-guards
 @StateMachine<DoorMachineContext>({
   id: 'door',
   initial: 'closed',
@@ -65,62 +71,171 @@ export interface DoorMachineContext {
     alert: false,
   },
   states: {
-    closed: {
-      initial: 'idle',
-      states: {
-        idle: {},
-        error: {},
-      },
-      on: {
-        SET_ADMIN: {
-          actions: assign({ level: 'admin' }),
-        },
-        SET_ALARM: {
-          actions: assign({ alert: true }),
-        },
-        OPEN: [
-          // Transitions are tested one at a time.
-          // The first valid transition will be taken.
-          { target: 'opened', cond: 'isAdmin' },
-          { target: '.error', cond: 'shouldAlert' },
-          { target: '.idle' },
-        ],
-      },
-    },
-    opened: {
-      on: {
-        CLOSE: { target: 'closed' },
-      },
-    },
+    ...
   },
 })
 export class DoorMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
-  @Guard('isAdmin')
-  isAdmin(context: DoorMachineContext) {
-    return context.level === 'admin';
-  }
 
-  @Guard('shouldAlert')
-  shouldAlert(context: DoorMachineContext) {
-    return context.alert === true;
+  openTheDoor() {
+    return this.transition('closed', 'OPEN')
   }
 }
-```
 
-#### Running transitions
-
-```ts
 const doorMachineExecutor = new StateMachineExecutor();
 
 doorMachineExecutor.transition('closed', 'OPEN');
 ```
 
-#### Using with outside context
+#### State Machine Interpreter
+
+The state machine interpreter allows you to define a state machine interpreter with a send method
+
+```ts
+import {
+  Interpreter,
+  StateMachineInterpreter,
+} from '@d3v0ps/xstate-decorators';
+
+export interface DoorMachineContext {
+  level: string;
+  alert: boolean; // alert when intrusions happen
+}
+
+@Interpreter<DoorMachineContext>({
+  id: 'door',
+  initial: 'closed',
+  context: {
+    level: 'user',
+    alert: false,
+  },
+  states: {
+    ...
+  },
+})
+export class DoorMachineInterpreter extends StateMachineInterpreter<DoorMachineContext> {
+
+  openTheDoor() {
+    return this.send('OPEN')
+  }
+}
+
+const doorMachineInterpreter = new DoorMachineInterpreter();
+
+doorMachineInterpreter.send('OPEN');
+```
+
+#### Guards
+
+You can define your guards inside the class using the `@Guard` decorator
+
+```ts
+import {
+  Interpreter,
+  Guard,
+  StateMachineInterpreter,
+} from '@d3v0ps/xstate-decorators';
+
+...
+
+@Interpreter<DoorMachineContext>({
+  ...
+})
+export class DoorMachineInterpreter extends StateMachineInterpreter<DoorMachineContext> {
+
+  @Guard('isAdmin')
+  isAdmin(context: DoorMachineContext) {
+    return context.level === 'admin';
+  }
+}
+
+```
+
+#### Actions
+
+You can define your actions inside the class using the `@Action` decorator
+
+```ts
+import {
+  Action,
+  Interpreter,
+  StateMachineInterpreter,
+} from '@d3v0ps/xstate-decorators';
+
+...
+
+@Interpreter<DoorMachineContext>({
+  ...
+})
+export class DoorMachineInterpreter extends StateMachineInterpreter<DoorMachineContext> {
+
+  @Action('logEvent')
+  logEvent(context: DoorMachineContext, event) {
+    console.log(event);
+  }
+}
+
+```
+
+#### Activities
+
+You can define your activities inside the class using the `@Activity` decorator
+
+```ts
+import {
+  Activity,
+  Interpreter,
+  StateMachineInterpreter,
+} from '@d3v0ps/xstate-decorators';
+
+...
+
+@Interpreter<DoorMachineContext>({
+  ...
+})
+export class DoorMachineInterpreter extends StateMachineInterpreter<DoorMachineContext> {
+
+  @Activity('sayHello')
+  sayHello() {
+    this.helloService.sayHello();
+  }
+}
+
+```
+
+#### Services
+
+You can define your services inside the class using the `@Service` decorator
+
+```ts
+import {
+  Interpreter,
+  Service
+  StateMachineInterpreter,
+} from '@d3v0ps/xstate-decorators';
+
+...
+
+@Interpreter<DoorMachineContext>({
+  ...
+})
+export class DoorMachineInterpreter extends StateMachineInterpreter<DoorMachineContext> {
+
+  @Service('getDoor')
+  async getDoor(context: DoorMachineContext): Promise<DoorMachineContext> {
+    return this.doorService.getDoor(context);
+  }
+}
+
+```
+
+#### Using different instances on each call (different contexts)
 
 i.e loading it from db or/and with Dependency Injection
 
+Executor:
+
 ```ts
-const doorMachineExecutor = new StateMachineExecutor();
+const doorMachineExecutor = new DoorMachineExecutor();
 const doorFromDb = {
   state: 'closed',
   context: {
@@ -130,15 +245,29 @@ const doorFromDb = {
 };
 
 doorMachineExecutor.transition(doorFromDb.state, 'OPEN', doorFromDb.context);
-// this internally calls to
-//    machine.withContext(context)
-//           .withConfig(this.options)
-//           .transition(currentState, event)
+```
+
+Interpreter:
+
+```ts
+const doorMachineInterpreter = new DoorMachineInterpreter();
+const { state, context } = {
+  state: 'closed',
+  context: {
+    level: 'user',
+    alert: false,
+  },
+};
+
+doorMachineInterpreter.send('OPEN', null, {
+  state,
+  context,
+});
 ```
 
 ### Using with Dependency Injection
 
-Note: If you are using a dependency injection provider you probably will want to run transitions [using outside context](#using-outside-context)
+Note: If you are using a dependency injection provider you probably will want to use different instances on each call [see Using different instances on each call (different contexts)](#using-different-instances-on-each-call-different-contexts)
 
 #### Angular
 
