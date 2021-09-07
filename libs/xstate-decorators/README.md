@@ -1,6 +1,8 @@
 <h1 align="center">Welcome to @d3v0ps/xstate-decorators 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000" />
+  <a href="https://www.npmjs.com/package/@d3v0ps/xstate-decorators" target="_blank">
+    <img src="https://img.shields.io/npm/v/@d3v0ps/xstate-decorators" />
+  </a>
   <a href="https://github.com/d3v0ps/npm-packages/tree/main/libs/xstate-decorators" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
