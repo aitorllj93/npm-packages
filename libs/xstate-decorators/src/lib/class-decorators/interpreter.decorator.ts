@@ -98,18 +98,18 @@ export const Interpreter =
             }
 
             const mustOmit =
-              (typeof omit === 'string' && state.value === omit) ||
-              (Array.isArray(omit) && omit.includes(state.value.toString())) ||
+              (typeof omit === 'string' && state.matches(omit)) ||
+              (Array.isArray(omit) && omit.some((s) => state.matches(s))) ||
               (typeof omit === 'function' && omit(state));
 
             const mustInclude =
-              (typeof include === 'string' && state.value === include) ||
-              (Array.isArray(include) && include.includes(state.value.toString())) ||
+              (typeof include === 'string' && state.matches(include)) ||
+              (Array.isArray(include) && include.some((s) => state.matches(s))) ||
               (typeof include === 'function' && include(state));
 
             const mustStopListening =
-              (typeof stopListening === 'string' && state.value === stopListening) ||
-              (Array.isArray(stopListening) && stopListening.includes(state.value.toString())) ||
+              (typeof stopListening === 'string' && state.matches(stopListening)) ||
+              (Array.isArray(stopListening) && stopListening.some((s) => state.matches(s))) ||
               (typeof stopListening === 'function' && stopListening(state));
 
             if (!mustOmit && mustInclude) {
