@@ -1,8 +1,7 @@
-
-import { StateMachine } from './state-machine.decorator';
-import { StateMachineExecutor } from './state-machine.executor';
-import { Guard } from './guard.decorator';
 import { assign } from 'xstate';
+import { StateMachineExecutor } from '../abstracts/state-machine.executor';
+import { Guard } from '../property-decorators/guard.decorator';
+import { StateMachine } from './state-machine.decorator';
 
 interface DoorMachineContext {
   level?: string;
@@ -55,10 +54,7 @@ const machineConfig = {
 
 @StateMachine<DoorMachineContext>(machineConfig)
 class DoorMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
-
-  constructor(
-    private checkIsAdmin: CheckIsAdmin
-  ) {
+  constructor(private checkIsAdmin: CheckIsAdmin) {
     super();
   }
 
@@ -73,67 +69,53 @@ class DoorMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
   }
 
   myClassMethod() {
-    throw new Error('Method not implemented')
+    throw new Error('Method not implemented');
   }
-
 }
 
 @StateMachine<DoorMachineContext>(machineConfig)
-class WithoutOptionsdMachineExecutor extends StateMachineExecutor<DoorMachineContext> {
+class WithoutOptionsdMachineExecutor extends StateMachineExecutor<DoorMachineContext> {}
 
-}
-
-describe('GuardDecorator', () => {
-
+describe('StateMachineDecorator', () => {
   let machine: StateMachineExecutor<DoorMachineContext>;
 
   describe('When instantiating a machine with guards', () => {
-
     beforeEach(() => {
       machine = new DoorMachineExecutor(new CheckIsAdmin());
-    })
+    });
 
     describe('When using internal context', () => {
-
       it('should use internal context', () => {
         const result = machine.transition('closed', 'OPEN');
 
         expect(result.matches('closed.idle')).toBeTruthy();
       });
-
-
     });
 
     describe('When using internal context', () => {
-
       it('should use externalContext', () => {
         const result = machine.transition('closed', 'OPEN', {
           alert: true,
-          level: 'admin'
+          level: 'admin',
         });
 
         expect(result.matches('opened')).toBeTruthy();
       });
-
     });
-
-  })
+  });
 
   describe('When not defining any option (i.e guards)', () => {
-
     beforeEach(() => {
       machine = new WithoutOptionsdMachineExecutor();
-    })
+    });
 
     it('should throw unable to evaluate due to missing guard', () => {
       expect(() => {
         machine.transition('closed', 'OPEN', {
           alert: true,
-          level: 'admin'
+          level: 'admin',
         });
       }).toThrow();
     });
-
   });
-
-})
+});
