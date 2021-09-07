@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to @d3v0ps/xstate-decorators 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/d3v0ps/npm-packages/blob/main/packages/xstate-decorators/README.md" target="_blank">
+  <a href="https://github.com/d3v0ps/npm-packages/tree/main/libs/xstate-decorators" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://github.com/d3v0ps/npm-packages/blob/main/LICENSE" target="_blank">
@@ -11,7 +11,7 @@
 
 > TypeScript decorators for creating [XState](https://xstate.js.org/docs/) machines
 
-### 🏠 [Homepage](https://github.com/d3v0ps/npm-packages/tree/main/packages/xstate-decorators)
+### 🏠 [Homepage](https://github.com/d3v0ps/npm-packages/tree/main/libs/xstate-decorators)
 
 ---
 
